@@ -86,15 +86,20 @@ clean_bash -c '
   ros2 run interface_install_consumer verify_installed_interfaces
 ' verify "$run"
 
-stage=navigation-message-exchange
-clean_bash -c '
-  source /opt/ros/jazzy/setup.bash
-  source "$1/underlay/local_setup.bash"
-  export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
-  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-  timeout 45s python3 "$2/tests/navigation_exchange.py" \
-    --expected-prefix "$1/underlay/openamr_nav_msgs"
-' verify "$run" "$root" | tee "$run/navigation-exchange.log"
+# Both middleware implementations are mandatory; pass the selection through env -i.
+for rmw in rmw_fastrtps_cpp rmw_cyclonedds_cpp; do
+  stage="navigation-message-exchange-$rmw"
+  clean_bash -c '
+    source /opt/ros/jazzy/setup.bash
+    source "$1/underlay/local_setup.bash"
+    export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+    export RMW_IMPLEMENTATION="$3"
+    echo "RMW_IMPLEMENTATION=$RMW_IMPLEMENTATION"
+    ros2 pkg prefix "$RMW_IMPLEMENTATION"
+    timeout 45s python3 "$2/tests/navigation_exchange.py" \
+      --expected-prefix "$1/underlay/openamr_nav_msgs"
+  ' verify "$run" "$root" "$rmw" 2>&1 | tee "$run/navigation-exchange-$rmw.log"
+done
 
 stage=reverted-interface-build
 mkdir -p "$run/reverted/src"

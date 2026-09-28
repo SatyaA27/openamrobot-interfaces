@@ -88,6 +88,7 @@ def consume():
     if NavigationStatus.get_fields_and_field_types().get("thresholds_id") != "string":
         print("CONTRACT_MISMATCH: NavigationStatus.thresholds_id expected string", flush=True)
         return 42
+    print(f"RMW loaded: {rclpy.utilities.get_rmw_implementation_identifier()}", flush=True)
     topic = f"/interface_verification/navigation_{uuid.uuid4().hex}"
     with tempfile.TemporaryDirectory(prefix="navigation-exchange-") as temporary:
         ready = Path(temporary) / "published"
