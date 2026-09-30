@@ -1,5 +1,4 @@
 {
-  "contract_status": "proposed",
   "native_lerobot": {
     "format_version": "v3.0",
     "dataset_id": "openamrobot/synthetic-c9-contract-fixture",

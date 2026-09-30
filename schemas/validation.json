@@ -11,7 +11,10 @@
         "schemas/json/c9-lerobot-dataset-invalid-missing-version.json",
         "schemas/json/c9-lerobot-dataset-invalid-missing-timebase.json",
         "schemas/json/c9-lerobot-dataset-invalid-malformed-camera.json",
-        "schemas/json/c9-lerobot-dataset-invalid-missing-provenance.json"
+        "schemas/json/c9-lerobot-dataset-invalid-missing-provenance.json",
+        "schemas/json/c9-lerobot-dataset-invalid-pending-sync-tolerance.json",
+        "schemas/json/c9-lerobot-dataset-invalid-missing-selected-timestamp.json",
+        "schemas/json/c9-lerobot-dataset-invalid-missing-host-receipt-timestamp.json"
       ]
     }
   ]

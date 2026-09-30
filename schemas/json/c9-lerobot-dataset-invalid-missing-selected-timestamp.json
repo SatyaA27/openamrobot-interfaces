@@ -1,0 +1,763 @@
+{
+  "contract_version": 1,
+  "native_lerobot": {
+    "format_version": "v3.0",
+    "dataset_id": "openamrobot/synthetic-c9-contract-fixture",
+    "episode_id": "synthetic-episode-000000",
+    "episode_index": 0,
+    "features": {
+      "observation.images.camera_wrist_left": {
+        "dtype": "video",
+        "shape": [
+          48,
+          64,
+          3
+        ],
+        "fps": 30,
+        "encoding": "rgb8"
+      },
+      "observation.images.camera_wrist_right": {
+        "dtype": "video",
+        "shape": [
+          48,
+          64,
+          3
+        ],
+        "fps": 30,
+        "encoding": "rgb8"
+      },
+      "observation.images.head": {
+        "dtype": "video",
+        "shape": [
+          48,
+          64,
+          3
+        ],
+        "fps": 30,
+        "encoding": "rgb8"
+      },
+      "observation.images.base": {
+        "dtype": "video",
+        "shape": [
+          48,
+          64,
+          3
+        ],
+        "fps": 30,
+        "encoding": "rgb8"
+      },
+      "observation.state": {
+        "dtype": "float32",
+        "shape": [
+          16
+        ],
+        "profile": "lerobot-v0.6.1-bi-openarm-position",
+        "dimensions": [
+          {
+            "name": "left_joint_1.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 1 position"
+          },
+          {
+            "name": "left_joint_2.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 2 position"
+          },
+          {
+            "name": "left_joint_3.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 3 position"
+          },
+          {
+            "name": "left_joint_4.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 4 position"
+          },
+          {
+            "name": "left_joint_5.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 5 position"
+          },
+          {
+            "name": "left_joint_6.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 6 position"
+          },
+          {
+            "name": "left_joint_7.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 7 position"
+          },
+          {
+            "name": "left_gripper.pos",
+            "unit": "degree",
+            "meaning": "left gripper position"
+          },
+          {
+            "name": "right_joint_1.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 1 position"
+          },
+          {
+            "name": "right_joint_2.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 2 position"
+          },
+          {
+            "name": "right_joint_3.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 3 position"
+          },
+          {
+            "name": "right_joint_4.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 4 position"
+          },
+          {
+            "name": "right_joint_5.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 5 position"
+          },
+          {
+            "name": "right_joint_6.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 6 position"
+          },
+          {
+            "name": "right_joint_7.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 7 position"
+          },
+          {
+            "name": "right_gripper.pos",
+            "unit": "degree",
+            "meaning": "right gripper position"
+          }
+        ]
+      },
+      "action": {
+        "dtype": "float32",
+        "shape": [
+          16
+        ],
+        "profile": "lerobot-v0.6.1-bi-openarm-position",
+        "dimensions": [
+          {
+            "name": "left_joint_1.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 1 position"
+          },
+          {
+            "name": "left_joint_2.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 2 position"
+          },
+          {
+            "name": "left_joint_3.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 3 position"
+          },
+          {
+            "name": "left_joint_4.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 4 position"
+          },
+          {
+            "name": "left_joint_5.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 5 position"
+          },
+          {
+            "name": "left_joint_6.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 6 position"
+          },
+          {
+            "name": "left_joint_7.pos",
+            "unit": "degree",
+            "meaning": "left arm joint 7 position"
+          },
+          {
+            "name": "left_gripper.pos",
+            "unit": "degree",
+            "meaning": "left gripper position"
+          },
+          {
+            "name": "right_joint_1.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 1 position"
+          },
+          {
+            "name": "right_joint_2.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 2 position"
+          },
+          {
+            "name": "right_joint_3.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 3 position"
+          },
+          {
+            "name": "right_joint_4.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 4 position"
+          },
+          {
+            "name": "right_joint_5.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 5 position"
+          },
+          {
+            "name": "right_joint_6.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 6 position"
+          },
+          {
+            "name": "right_joint_7.pos",
+            "unit": "degree",
+            "meaning": "right arm joint 7 position"
+          },
+          {
+            "name": "right_gripper.pos",
+            "unit": "degree",
+            "meaning": "right gripper position"
+          }
+        ]
+      }
+    },
+    "task": {
+      "task_index": 0,
+      "instruction": "Move the synthetic object to the marked synthetic target."
+    },
+    "dataset_revision": "synthetic-fixture-1",
+    "length": 2,
+    "fps": 30
+  },
+  "openamrobot": {
+    "timebase": {
+      "clock_domain": "synthetic.monotonic",
+      "unit": "ns",
+      "origin": "recording_start",
+      "ordering_rule": "monotonic"
+    },
+    "synchronization": {
+      "status": "pending_evidence",
+      "tolerance_ns": null,
+      "basis": "A validated numerical tolerance awaits physical recording and calibration evidence."
+    },
+    "action_semantics": {
+      "values": "requested_pre_clip",
+      "timestamp": "command_issued",
+      "observation_relationship": "The requested action is issued after the observation linked by the same frame_index.",
+      "capture_provenance": "Native LeRobot v0.6.1 records the requested action input rather than the robot send_action return value."
+    },
+    "streams": {
+      "camera_wrist_left": {
+        "native_feature_key": "observation.images.camera_wrist_left",
+        "role": "wrist_left",
+        "physical_id": "synthetic-camera-wrist-left",
+        "configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "frame": {
+          "width": 64,
+          "height": 48,
+          "fps": 30,
+          "encoding": "rgb8",
+          "stereo_view": "mono"
+        },
+        "calibration": {
+          "id": "synthetic-calibration",
+          "version": "fixture-1",
+          "residual": {
+            "status": "not_measured",
+            "reason": "Synthetic contract fixture has no physical calibration measurement."
+          }
+        },
+        "timestamps": {
+          "capture_source": "host_receipt",
+          "host_receipt": {
+            "clock_domain": "synthetic.host.monotonic",
+            "raw_unit": "ns",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic identity mapping",
+              "source_origin": 1000000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1,
+              "validity": {
+                "source_start": 1000000000,
+                "source_end": 2000000000
+              }
+            }
+          },
+          "device": {
+            "availability": "unavailable",
+            "reason": "Synthetic fixture intentionally has no device clock."
+          }
+        }
+      },
+      "camera_wrist_right": {
+        "native_feature_key": "observation.images.camera_wrist_right",
+        "role": "wrist_right",
+        "physical_id": "synthetic-camera-wrist-right",
+        "configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "frame": {
+          "width": 64,
+          "height": 48,
+          "fps": 30,
+          "encoding": "rgb8",
+          "stereo_view": "mono"
+        },
+        "calibration": {
+          "id": "synthetic-calibration",
+          "version": "fixture-1",
+          "residual": {
+            "status": "not_measured",
+            "reason": "Synthetic contract fixture has no physical calibration measurement."
+          }
+        },
+        "timestamps": {
+          "capture_source": "host_receipt",
+          "host_receipt": {
+            "clock_domain": "synthetic.host.monotonic",
+            "raw_unit": "ns",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic identity mapping",
+              "source_origin": 1000000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1,
+              "validity": {
+                "source_start": 1000000000,
+                "source_end": 2000000000
+              }
+            }
+          },
+          "device": {
+            "availability": "unavailable",
+            "reason": "Synthetic fixture intentionally has no device clock."
+          }
+        }
+      },
+      "head": {
+        "native_feature_key": "observation.images.head",
+        "role": "head",
+        "physical_id": "synthetic-head-stereo",
+        "configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "frame": {
+          "width": 64,
+          "height": 48,
+          "fps": 30,
+          "encoding": "rgb8",
+          "stereo_view": "packed_stereo"
+        },
+        "calibration": {
+          "id": "synthetic-calibration",
+          "version": "fixture-1",
+          "residual": {
+            "status": "not_measured",
+            "reason": "Synthetic contract fixture has no physical calibration measurement."
+          }
+        },
+        "timestamps": {
+          "capture_source": "device",
+          "host_receipt": {
+            "clock_domain": "synthetic.host.monotonic",
+            "raw_unit": "ns",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic identity mapping",
+              "source_origin": 1000000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1,
+              "validity": {
+                "source_start": 1000000000,
+                "source_end": 2000000000
+              }
+            }
+          },
+          "device": {
+            "availability": "available",
+            "clock_domain": "synthetic.head.device",
+            "raw_unit": "us",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic affine example",
+              "source_origin": 1000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1000,
+              "validity": {
+                "source_start": 1000000,
+                "source_end": 2000000
+              }
+            }
+          }
+        }
+      },
+      "base": {
+        "native_feature_key": "observation.images.base",
+        "role": "base_navigation",
+        "physical_id": "synthetic-base-navigation",
+        "configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "frame": {
+          "width": 64,
+          "height": 48,
+          "fps": 30,
+          "encoding": "rgb8",
+          "stereo_view": "mono"
+        },
+        "calibration": {
+          "id": "synthetic-calibration",
+          "version": "fixture-1",
+          "residual": {
+            "status": "not_measured",
+            "reason": "Synthetic contract fixture has no physical calibration measurement."
+          }
+        },
+        "timestamps": {
+          "capture_source": "host_receipt",
+          "host_receipt": {
+            "clock_domain": "synthetic.host.monotonic",
+            "raw_unit": "ns",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic identity mapping",
+              "source_origin": 1000000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1,
+              "validity": {
+                "source_start": 1000000000,
+                "source_end": 2000000000
+              }
+            }
+          },
+          "device": {
+            "availability": "unavailable",
+            "reason": "Synthetic fixture intentionally has no device clock."
+          }
+        }
+      },
+      "robot_state": {
+        "native_feature_key": "observation.state",
+        "configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "value_semantics": "measured",
+        "reference_frame": null,
+        "reference_frame_reason": "Joint-space position dimensions do not use a Cartesian reference frame.",
+        "timestamps": {
+          "capture_source": "host_receipt",
+          "host_receipt": {
+            "clock_domain": "synthetic.host.monotonic",
+            "raw_unit": "ns",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic identity mapping",
+              "source_origin": 1000000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1,
+              "validity": {
+                "source_start": 1000000000,
+                "source_end": 2000000000
+              }
+            }
+          },
+          "device": {
+            "availability": "unavailable",
+            "reason": "Synthetic fixture intentionally has no device clock."
+          }
+        }
+      },
+      "action": {
+        "native_feature_key": "action",
+        "configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "reference_frame": null,
+        "reference_frame_reason": "Joint-space position commands do not use a Cartesian reference frame.",
+        "timestamps": {
+          "capture_source": "host_receipt",
+          "host_receipt": {
+            "clock_domain": "synthetic.host.monotonic",
+            "raw_unit": "ns",
+            "mapping_to_authoritative": {
+              "status": "valid",
+              "method": "synthetic identity mapping",
+              "source_origin": 1000000000,
+              "authoritative_origin_ns": 0,
+              "scale_ns_per_source_unit": 1,
+              "validity": {
+                "source_start": 1000000000,
+                "source_end": 2000000000
+              }
+            }
+          },
+          "device": {
+            "availability": "unavailable",
+            "reason": "Synthetic fixture intentionally has no device clock."
+          }
+        }
+      }
+    },
+    "samples": [
+      {
+        "episode_index": 0,
+        "frame_index": 0,
+        "task_index": 0,
+        "authoritative_timestamp_ns": 0,
+        "streams": {
+          "camera_wrist_left": {
+            "sequence_id": null,
+            "source_frame_id": null,
+            "health": "missing",
+            "selection_timestamp_source": "none",
+            "selected_timestamp_ns": 0,
+            "host_receipt": {
+              "status": "unavailable",
+              "reason": "Missing sample has no host receipt timestamp."
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Missing sample has no device timestamp."
+            },
+            "measured_skew_ns": null
+          },
+          "camera_wrist_right": {
+            "sequence_id": 0,
+            "source_frame_id": "synthetic-0",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 0,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1000000000,
+              "mapped_authoritative_ns": 0
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "head": {
+            "sequence_id": 0,
+            "source_frame_id": "synthetic-0",
+            "health": "fresh",
+            "selection_timestamp_source": "device",
+            "selected_timestamp_ns": 0,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1000000000,
+              "mapped_authoritative_ns": 0
+            },
+            "device_timestamp": {
+              "status": "valid",
+              "raw": 1000000.0,
+              "mapped_authoritative_ns": 0
+            },
+            "measured_skew_ns": 0
+          },
+          "base": {
+            "sequence_id": 0,
+            "source_frame_id": "synthetic-0",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 0,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1000000000,
+              "mapped_authoritative_ns": 0
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "robot_state": {
+            "sequence_id": 0,
+            "source_frame_id": "synthetic-0",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 0,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1000000000,
+              "mapped_authoritative_ns": 0
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "action": {
+            "sequence_id": 0,
+            "source_frame_id": "synthetic-0",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 1000,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1000001000,
+              "mapped_authoritative_ns": 1000
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 1000
+          }
+        }
+      },
+      {
+        "episode_index": 0,
+        "frame_index": 1,
+        "task_index": 0,
+        "authoritative_timestamp_ns": 33333333,
+        "streams": {
+          "camera_wrist_left": {
+            "sequence_id": 1,
+            "source_frame_id": "synthetic-1",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 33333333,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1033333333,
+              "mapped_authoritative_ns": 33333333
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "camera_wrist_right": {
+            "sequence_id": 1,
+            "source_frame_id": "synthetic-1",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 33333333,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1033333333,
+              "mapped_authoritative_ns": 33333333
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "head": {
+            "sequence_id": 1,
+            "source_frame_id": "synthetic-1",
+            "health": "fresh",
+            "selection_timestamp_source": "device",
+            "selected_timestamp_ns": 33333333,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1033333333,
+              "mapped_authoritative_ns": 33333333
+            },
+            "device_timestamp": {
+              "status": "valid",
+              "raw": 1033333.333,
+              "mapped_authoritative_ns": 33333333
+            },
+            "measured_skew_ns": 0
+          },
+          "base": {
+            "sequence_id": 1,
+            "source_frame_id": "synthetic-1",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 33333333,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1033333333,
+              "mapped_authoritative_ns": 33333333
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "robot_state": {
+            "sequence_id": 1,
+            "source_frame_id": "synthetic-1",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 33333333,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1033333333,
+              "mapped_authoritative_ns": 33333333
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 0
+          },
+          "action": {
+            "sequence_id": 1,
+            "source_frame_id": "synthetic-1",
+            "health": "fresh",
+            "selection_timestamp_source": "host_receipt",
+            "selected_timestamp_ns": 33334333,
+            "host_receipt": {
+              "status": "valid",
+              "raw": 1033334333,
+              "mapped_authoritative_ns": 33334333
+            },
+            "device_timestamp": {
+              "status": "unavailable",
+              "reason": "Synthetic fixture intentionally has no device clock."
+            },
+            "measured_skew_ns": 1000
+          }
+        }
+      }
+    ],
+    "outcome": {
+      "status": "unknown",
+      "reason": "Synthetic schema fixture does not represent a completed physical task."
+    },
+    "events": [
+      {
+        "event_id": "synthetic-intervention",
+        "type": "intervention",
+        "start_timestamp_ns": 1000,
+        "end_timestamp_ns": 2000,
+        "description": "Synthetic operator correction marker, no hardware action.",
+        "linked_frame_indices": [
+          0
+        ]
+      }
+    ],
+    "provenance": {
+      "data_origin": "synthetic",
+      "source_profile": "c9-schema-fixture",
+      "robot_configuration_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "software": [
+        {
+          "name": "synthetic-c9-fixture-generator",
+          "version": "fixture-1",
+          "commit": null,
+          "repository": "https://github.com/openAMRobot/openamrobot-interfaces"
+        }
+      ],
+      "lerobot_compatibility": {
+        "inspected_baseline": {
+          "release": "v0.6.1",
+          "commit": "7e241bd630a3719a56157a497ce5d08f244784f1",
+          "status": "inspected_not_validated"
+        },
+        "validated_release_pin": null
+      }
+    },
+    "recording": {
+      "start_timestamp_ns": 0,
+      "end_timestamp_ns": 34000000,
+      "status": "complete"
+    }
+  }
+}

@@ -1,16 +1,21 @@
 # C9 whole-body capture / LeRobotDataset contract
 
+Status: **Proposed** — [contract change request #18](https://github.com/openAMRobot/openamrobot-interfaces/issues/18), pending software-lead acceptance.
+
 `schemas/json/c9-lerobot-dataset.schema.json` is the proposed version 1
 episode-manifest contract for Workstream C9. It describes a recording and its
 metadata; it does not implement a recorder, camera driver, ROS node, dataset
 writer, replay system, training pipeline, policy, or safety controller.
 
-The root object requires `contract_version: 1`, `contract_status: "proposed"`,
-`native_lerobot`, and `openamrobot`. `proposed` is deliberate: owner review is
-required before this becomes an accepted shared interface. Version 1 is the
-first schema version; incompatible future changes require a new version while
-closed-object fields also require a version change because older validators reject unknown fields. Additional camera entries are already permitted in version 1. The valid fixture is
-synthetic schema evidence, not a calibrated capture or physical acceptance.
+The root object requires `contract_version: 1`, `native_lerobot`, and
+`openamrobot`. Proposal status is deliberately not recorded in each episode.
+Acceptance changes the document and change-request status, not the version-1
+recording shape, so it does not invalidate version-1 recordings. Version 1 is
+the first schema version; incompatible future changes require a new version while
+closed-object fields also require a version change because older validators
+reject unknown fields. Additional camera entries are already permitted in
+version 1. The valid fixture is synthetic schema evidence, not a calibrated
+capture or physical acceptance.
 
 ## Native LeRobot binding
 
@@ -106,7 +111,7 @@ calibration identifier, configuration hash, clock information, and source
 provenance. Calibration residuals are structured metrics with an explicit
 unit and statistic. The contract deliberately does not assert a universal
 residual value, unit, or statistic: the calibration producer must state what
-was measured. This supports Sai Vineeth's calibration/recording work without
+was measured. This supports the calibration and recording work package without
 moving calibration implementation into this repository.
 
 `openamrobot.provenance` records the source profile, robot configuration hash,
@@ -117,6 +122,8 @@ either a measured value with name/unit/statistic/method, or
 `pending`, or `unavailable` states. These states make missing evidence visible
 rather than fabricated. The schema's fixture marks its values as synthetic and
 does not validate a camera, calibration, device clock, or robot configuration.
+Software repository references are required nonempty text strings; the schema
+does not claim to validate URI syntax.
 
 ## Episode result and events
 
@@ -124,9 +131,9 @@ does not validate a camera, calibration, device clock, or robot configuration.
 `openamrobot.events` records timestamp-linked human interventions,
 corrections, recoveries, safety-related events, and aborts. Failure and a
 safety event are independent observations: neither field commands recovery or
-safety behavior. These records give Satya's C10 quality gate, and Marcus's
-capture/replay/evaluation work, the evidence needed to check completeness and
-event linkage while leaving runtime ownership unresolved.
+safety behavior. These records give the C10 dataset-quality gate and the
+capture/replay/evaluation work package the evidence needed to check
+completeness and event linkage while leaving runtime ownership unresolved.
 
 ## Boundaries and follow-ups
 
@@ -149,8 +156,9 @@ threshold, physical source-profile details and camera eye/layout, the
 calibration residual convention, runtime recorder ownership, and any accepted
 whole-body action profile beyond the named OpenArm development profile.
 
-Primary sources: [LeRobot v0.6.1](https://github.com/huggingface/lerobot/tree/7e241bd630a3719a56157a497ce5d08f244784f1),
-[OpenArm fake-hardware baseline PR](https://github.com/openAMRobot/openamrobot-manipulation/pull/9),
+Primary sources: [LeRobot v0.6.1](https://github.com/huggingface/lerobot/tree/7e241bd630a3719a56157a497ce5d08f244784f1)
+(Apache-2.0), [OpenArm Dataset](https://github.com/enactic/openarm_dataset/tree/1add81f9390afbbe1c1ebdf6bac0b22d687c56b4)
+(Apache-2.0), [OpenArm fake-hardware baseline PR](https://github.com/openAMRobot/openamrobot-manipulation/pull/9),
 and [OpenArm description](https://github.com/enactic/openarm_description/tree/14ff67b638ff1c738a1b9a6be8aaa5ce5ed2c831).
 The action distinction follows [LeRobot's v0.6.1 recorder](https://github.com/huggingface/lerobot/blob/7e241bd630a3719a56157a497ce5d08f244784f1/src/lerobot/scripts/lerobot_record.py#L328-L338).
 
@@ -195,11 +203,13 @@ proposed representation rules, not measured clock-calibration claims.
 A valid sample's selected time MUST equal the mapped time from its declared
 selection source. Host receipt time is an arrival-time proxy, not exposure
 time; producers MUST not relabel it as physical acquisition time. Pending
-mappings retain raw values with a reason and use `health: unmapped`, null
-selected time and null skew. Missing/dropped slots retain null source IDs,
-selected time and skew, plus unavailable timestamp reasons. Available source
-samples MUST retain host receipt information; device timestamps may explicitly
-be unavailable. `fresh`/`stale` are producer reports, not QA verdicts.
+device mappings MUST retain their raw values and a reason, and use
+`health: unmapped`, null selected time and null skew. Missing/dropped slots
+retain null source IDs, selected time and skew, plus unavailable timestamp
+reasons; their host-receipt timestamp status is `unavailable`, so raw and
+mapped receipt fields are absent. Available source samples MUST retain host
+receipt information; device timestamps may explicitly be unavailable.
+`fresh`/`stale` are producer reports, not QA verdicts.
 
 `measured_skew_ns` is the absolute difference between a stream's selected time
 and the sample's `authoritative_timestamp_ns` (the observation reference).
@@ -219,8 +229,9 @@ known, separately from this proposal's inspected baseline. Unknown commits use
 null; unknown versions use the explicit string `unknown`, with the reason in
 the source profile. Fixture zeros and synthetic IDs MUST NOT be copied into
 actual recordings. `validated_release_pin: null` means no validated pin.
-For joint-space dimensions, null reference frame requires the provided reason;
-Cartesian profiles MUST specify frames and per-dimension units/semantics.
+For joint-space dimensions, a null reference frame requires the provided
+reason; for a non-null reference frame, that reason is optional. Cartesian profiles MUST
+specify frames and per-dimension units/semantics.
 
 | C9 structural validation | Deferred C10 evidence checks |
 | --- | --- |
@@ -231,9 +242,13 @@ Cartesian profiles MUST specify frames and per-dimension units/semantics.
 | Outcome, recording boundaries and event structure | Frame coverage, event bounds, episode completeness |
 
 JSON Schema does not prove the cross-field or temporal requirements in the
-right column. A structurally valid document can fail C10. The five registered
-negative fixtures each remove one required field or set head width to zero;
-none relies on malformed JSON/YAML. The existing validator is reused unchanged.
+right column. A structurally valid document can fail C10. The eight registered
+negative fixtures remove a required field, set head width to zero, or exercise
+one of the three conditional requirements: a pending synchronization threshold
+must be null; a missing sample's selected timestamp must be null; and a missing
+sample must use an unavailable host-receipt timestamp status with no receipt
+raw or mapped time. None relies on malformed JSON/YAML. The existing validator
+is reused unchanged.
 
 Camera conventions are evidenced by the [OpenArm camera examples](https://github.com/enactic/openarm_dataset/blob/1add81f9390afbbe1c1ebdf6bac0b22d687c56b4/README.md#L91-L112)
 and [LeRobot bimanual camera handling](https://github.com/huggingface/lerobot/blob/7e241bd630a3719a56157a497ce5d08f244784f1/src/lerobot/robots/bi_openarm_follower/bi_openarm_follower.py).

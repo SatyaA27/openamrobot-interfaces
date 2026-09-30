@@ -5,10 +5,9 @@
   "description": "Additive capture metadata for one native LeRobot v3.0 episode. Media and policy payloads remain in the LeRobot dataset.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contract_version", "contract_status", "native_lerobot", "openamrobot"],
+  "required": ["contract_version", "native_lerobot", "openamrobot"],
   "properties": {
     "contract_version": {"const": 1},
-    "contract_status": {"const": "proposed"},
     "native_lerobot": {"$ref": "#/$defs/nativeLeRobot"},
     "openamrobot": {"$ref": "#/$defs/openAMRobot"}
   },
@@ -226,27 +225,35 @@
     "stateStream": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["native_feature_key", "configuration_hash", "value_semantics", "reference_frame", "reference_frame_reason", "timestamps"],
+      "required": ["native_feature_key", "configuration_hash", "value_semantics", "reference_frame", "timestamps"],
       "properties": {
         "native_feature_key": {"const": "observation.state"},
         "configuration_hash": {"$ref": "#/$defs/sha256"},
         "value_semantics": {"enum": ["measured", "estimated"]},
-        "reference_frame": {"type": ["string", "null"]},
+        "reference_frame": {"oneOf": [{"$ref": "#/$defs/nonEmptyString"}, {"type": "null"}]},
         "reference_frame_reason": {"$ref": "#/$defs/nonEmptyString"},
         "timestamps": {"$ref": "#/$defs/timestampMetadata"}
-      }
+      },
+      "allOf": [{
+        "if": {"properties": {"reference_frame": {"type": "null"}}},
+        "then": {"required": ["reference_frame_reason"]}
+      }]
     },
     "actionStream": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["native_feature_key", "configuration_hash", "reference_frame", "reference_frame_reason", "timestamps"],
+      "required": ["native_feature_key", "configuration_hash", "reference_frame", "timestamps"],
       "properties": {
         "native_feature_key": {"const": "action"},
         "configuration_hash": {"$ref": "#/$defs/sha256"},
-        "reference_frame": {"type": ["string", "null"]},
+        "reference_frame": {"oneOf": [{"$ref": "#/$defs/nonEmptyString"}, {"type": "null"}]},
         "reference_frame_reason": {"$ref": "#/$defs/nonEmptyString"},
         "timestamps": {"$ref": "#/$defs/timestampMetadata"}
-      }
+      },
+      "allOf": [{
+        "if": {"properties": {"reference_frame": {"type": "null"}}},
+        "then": {"required": ["reference_frame_reason"]}
+      }]
     },
     "hostSampleTimestamp": {
       "oneOf": [
@@ -281,10 +288,19 @@
         {
           "type": "object",
           "additionalProperties": false,
+          "required": ["status", "raw", "reason"],
+          "properties": {
+            "status": {"const": "pending"},
+            "raw": {"type": "number"},
+            "reason": {"$ref": "#/$defs/nonEmptyString"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
           "required": ["status", "reason"],
           "properties": {
-            "status": {"enum": ["pending", "unavailable"]},
-            "raw": {"type": "number"},
+            "status": {"const": "unavailable"},
             "reason": {"$ref": "#/$defs/nonEmptyString"}
           }
         }
@@ -322,6 +338,8 @@
               "source_frame_id": {"const": null},
               "selection_timestamp_source": {"const": "none"},
               "selected_timestamp_ns": {"const": null},
+              "host_receipt": {"properties": {"status": {"const": "unavailable"}}},
+              "device_timestamp": {"properties": {"status": {"const": "unavailable"}}},
               "measured_skew_ns": {"const": null}
             }
           },
@@ -370,7 +388,7 @@
         "name": {"$ref": "#/$defs/nonEmptyString"},
         "version": {"$ref": "#/$defs/nonEmptyString"},
         "commit": {"oneOf": [{"$ref": "#/$defs/gitCommit"}, {"type": "null"}]},
-        "repository": {"type": "string", "format": "uri"}
+        "repository": {"$ref": "#/$defs/nonEmptyString"}
       }
     },
     "openAMRobot": {
