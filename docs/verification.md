@@ -37,9 +37,10 @@ from the checks, which always run through `tools/verify.sh`.
    ROS overlays, Python paths, CMake prefixes, or shell startup files.
 2. Run [lint/schema validation](schema-validation.md): package metadata,
    CMake lint, ROS definition parsing and registered JSON/YAML schema fixtures.
-   Run all 15 schema-validator regression tests. Absent domain schemas are
-   explicitly reported as `NOT_APPLICABLE`, with count zero and a reason;
-   this does not skip the validator regression suite.
+   Run all 15 schema-validator regression tests and the registered C9
+   LeRobotDataset valid/invalid manifests. Schema validation establishes
+   structural conformance only; it does not validate capture hardware,
+   calibration, synchronization measurements, or release readiness.
 3. Copy all interface packages under `ros2/` into a new workspace and build with
    colcon, using only `/opt/ros/jazzy` as the underlay. No cached build or symlink
    install is used.

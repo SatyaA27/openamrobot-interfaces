@@ -1,0 +1,555 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openamrobot:contract:c9:1",
+  "title": "OpenAMRobot C9 LeRobotDataset episode contract",
+  "description": "Additive capture metadata for one native LeRobot v3.0 episode. Media and policy payloads remain in the LeRobot dataset.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "contract_status", "native_lerobot", "openamrobot"],
+  "properties": {
+    "contract_version": {"const": 1},
+    "contract_status": {"const": "proposed"},
+    "native_lerobot": {"$ref": "#/$defs/nativeLeRobot"},
+    "openamrobot": {"$ref": "#/$defs/openAMRobot"}
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gitCommit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "imageShape": {
+      "type": "array",
+      "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}, {"const": 3}],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "imageFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dtype", "shape", "fps", "encoding"],
+      "properties": {
+        "dtype": {"const": "video"},
+        "shape": {"$ref": "#/$defs/imageShape"},
+        "fps": {"type": "number", "exclusiveMinimum": 0},
+        "encoding": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "unit", "meaning"],
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "unit": {"$ref": "#/$defs/nonEmptyString"},
+        "meaning": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "vectorFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dtype", "shape", "dimensions", "profile"],
+      "properties": {
+        "dtype": {"const": "float32"},
+        "shape": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 1}], "minItems": 1, "maxItems": 1},
+        "dimensions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/dimension"}},
+        "profile": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "nativeLeRobot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format_version", "dataset_id", "episode_id", "episode_index", "features", "task", "dataset_revision", "length", "fps"],
+      "properties": {
+        "format_version": {"const": "v3.0"},
+        "dataset_id": {"$ref": "#/$defs/nonEmptyString"},
+        "episode_id": {"$ref": "#/$defs/nonEmptyString"},
+        "episode_index": {"type": "integer", "minimum": 0},
+        "features": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observation.images.camera_wrist_left",
+            "observation.images.camera_wrist_right",
+            "observation.images.head",
+            "observation.images.base",
+            "observation.state",
+            "action"
+          ],
+          "properties": {
+            "observation.images.camera_wrist_left": {"$ref": "#/$defs/imageFeature"},
+            "observation.images.camera_wrist_right": {"$ref": "#/$defs/imageFeature"},
+            "observation.images.head": {"$ref": "#/$defs/imageFeature"},
+            "observation.images.base": {"$ref": "#/$defs/imageFeature"},
+            "observation.state": {"$ref": "#/$defs/vectorFeature"},
+            "action": {"$ref": "#/$defs/vectorFeature"}
+          },
+          "patternProperties": {"^observation\\.images\\.[a-z][a-z0-9_]*$": {"$ref": "#/$defs/imageFeature"}}
+        },
+        "task": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["task_index", "instruction"],
+          "properties": {"task_index": {"type": "integer", "minimum": 0}, "instruction": {"$ref": "#/$defs/nonEmptyString"}}
+        },
+        "dataset_revision": {"$ref": "#/$defs/nonEmptyString"},
+        "length": {"type": "integer", "minimum": 1},
+        "fps": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "validMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "source_origin", "authoritative_origin_ns", "scale_ns_per_source_unit", "validity"],
+      "properties": {
+        "status": {"const": "valid"},
+        "method": {"$ref": "#/$defs/nonEmptyString"},
+        "source_origin": {"type": "number"},
+        "authoritative_origin_ns": {"type": "integer", "minimum": 0},
+        "scale_ns_per_source_unit": {"type": "number", "exclusiveMinimum": 0},
+        "validity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_start", "source_end"],
+          "properties": {"source_start": {"type": "number"}, "source_end": {"type": "number"}}
+        }
+      }
+    },
+    "pendingMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {"status": {"enum": ["pending", "unavailable"]}, "reason": {"$ref": "#/$defs/nonEmptyString"}}
+    },
+    "clockMapping": {"oneOf": [{"$ref": "#/$defs/validMapping"}, {"$ref": "#/$defs/pendingMapping"}]},
+    "timestampMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capture_source", "host_receipt", "device"],
+      "properties": {
+        "capture_source": {"enum": ["device", "host_receipt"]},
+        "host_receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["clock_domain", "raw_unit", "mapping_to_authoritative"],
+          "properties": {
+            "clock_domain": {"$ref": "#/$defs/nonEmptyString"},
+            "raw_unit": {"$ref": "#/$defs/nonEmptyString"},
+            "mapping_to_authoritative": {"$ref": "#/$defs/clockMapping"}
+          }
+        },
+        "device": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability"],
+          "properties": {
+            "availability": {"enum": ["available", "unavailable"]},
+            "clock_domain": {"$ref": "#/$defs/nonEmptyString"},
+            "raw_unit": {"$ref": "#/$defs/nonEmptyString"},
+            "mapping_to_authoritative": {"$ref": "#/$defs/clockMapping"},
+            "reason": {"$ref": "#/$defs/nonEmptyString"}
+          },
+          "allOf": [
+            {
+              "if": {"properties": {"availability": {"const": "available"}}},
+              "then": {"required": ["clock_domain", "raw_unit", "mapping_to_authoritative"]},
+              "else": {
+                "required": ["reason"],
+                "properties": {"clock_domain": false, "raw_unit": false, "mapping_to_authoritative": false}
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"capture_source": {"const": "device"}}},
+          "then": {"properties": {"device": {"properties": {"availability": {"const": "available"}}}}}
+        }
+      ]
+    },
+    "residual": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "name", "value", "unit", "statistic", "method"],
+          "properties": {
+            "status": {"const": "measured"},
+            "name": {"$ref": "#/$defs/nonEmptyString"},
+            "value": {"type": "number", "minimum": 0},
+            "unit": {"$ref": "#/$defs/nonEmptyString"},
+            "statistic": {"$ref": "#/$defs/nonEmptyString"},
+            "method": {"$ref": "#/$defs/nonEmptyString"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": {"status": {"const": "not_measured"}, "reason": {"$ref": "#/$defs/nonEmptyString"}}
+        }
+      ]
+    },
+    "cameraStream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["native_feature_key", "role", "physical_id", "configuration_hash", "frame", "calibration", "timestamps"],
+      "properties": {
+        "native_feature_key": {"$ref": "#/$defs/nonEmptyString"},
+        "role": {"enum": ["wrist_left", "wrist_right", "head", "base_navigation"]},
+        "physical_id": {"$ref": "#/$defs/nonEmptyString"},
+        "configuration_hash": {"$ref": "#/$defs/sha256"},
+        "frame": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height", "fps", "encoding", "stereo_view"],
+          "properties": {
+            "width": {"type": "integer", "minimum": 1},
+            "height": {"type": "integer", "minimum": 1},
+            "fps": {"type": "number", "exclusiveMinimum": 0},
+            "encoding": {"$ref": "#/$defs/nonEmptyString"},
+            "stereo_view": {"enum": ["mono", "left", "right", "packed_stereo"]}
+          }
+        },
+        "calibration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "residual"],
+          "properties": {
+            "id": {"$ref": "#/$defs/nonEmptyString"},
+            "version": {"$ref": "#/$defs/nonEmptyString"},
+            "residual": {"$ref": "#/$defs/residual"}
+          }
+        },
+        "timestamps": {"$ref": "#/$defs/timestampMetadata"}
+      }
+    },
+    "stateStream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["native_feature_key", "configuration_hash", "value_semantics", "reference_frame", "reference_frame_reason", "timestamps"],
+      "properties": {
+        "native_feature_key": {"const": "observation.state"},
+        "configuration_hash": {"$ref": "#/$defs/sha256"},
+        "value_semantics": {"enum": ["measured", "estimated"]},
+        "reference_frame": {"type": ["string", "null"]},
+        "reference_frame_reason": {"$ref": "#/$defs/nonEmptyString"},
+        "timestamps": {"$ref": "#/$defs/timestampMetadata"}
+      }
+    },
+    "actionStream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["native_feature_key", "configuration_hash", "reference_frame", "reference_frame_reason", "timestamps"],
+      "properties": {
+        "native_feature_key": {"const": "action"},
+        "configuration_hash": {"$ref": "#/$defs/sha256"},
+        "reference_frame": {"type": ["string", "null"]},
+        "reference_frame_reason": {"$ref": "#/$defs/nonEmptyString"},
+        "timestamps": {"$ref": "#/$defs/timestampMetadata"}
+      }
+    },
+    "hostSampleTimestamp": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "raw", "mapped_authoritative_ns"],
+          "properties": {"status": {"const": "valid"}, "raw": {"type": "number"}, "mapped_authoritative_ns": {"type": "integer", "minimum": 0}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": {"status": {"const": "unavailable"}, "reason": {"$ref": "#/$defs/nonEmptyString"}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "raw", "reason"],
+          "properties": {"status": {"const": "pending"}, "raw": {"type": "number"}, "reason": {"$ref": "#/$defs/nonEmptyString"}}
+        }
+      ]
+    },
+    "deviceSampleTimestamp": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "raw", "mapped_authoritative_ns"],
+          "properties": {"status": {"const": "valid"}, "raw": {"type": "number"}, "mapped_authoritative_ns": {"type": "integer", "minimum": 0}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": {
+            "status": {"enum": ["pending", "unavailable"]},
+            "raw": {"type": "number"},
+            "reason": {"$ref": "#/$defs/nonEmptyString"}
+          }
+        }
+      ]
+    },
+    "streamSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence_id",
+        "source_frame_id",
+        "health",
+        "selection_timestamp_source",
+        "selected_timestamp_ns",
+        "host_receipt",
+        "device_timestamp",
+        "measured_skew_ns"
+      ],
+      "properties": {
+        "sequence_id": {"type": ["integer", "null"], "minimum": 0},
+        "source_frame_id": {"type": ["string", "null"]},
+        "health": {"enum": ["fresh", "stale", "dropped", "missing", "unmapped"]},
+        "selection_timestamp_source": {"enum": ["device", "host_receipt", "none"]},
+        "selected_timestamp_ns": {"type": ["integer", "null"], "minimum": 0},
+        "host_receipt": {"$ref": "#/$defs/hostSampleTimestamp"},
+        "device_timestamp": {"$ref": "#/$defs/deviceSampleTimestamp"},
+        "measured_skew_ns": {"type": ["integer", "null"], "minimum": 0}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"health": {"enum": ["missing", "dropped"]}}},
+          "then": {
+            "properties": {
+              "sequence_id": {"const": null},
+              "source_frame_id": {"const": null},
+              "selection_timestamp_source": {"const": "none"},
+              "selected_timestamp_ns": {"const": null},
+              "measured_skew_ns": {"const": null}
+            }
+          },
+          "else": {
+            "if": {"properties": {"health": {"const": "unmapped"}}},
+            "then": {
+              "properties": {
+                "sequence_id": {"type": "integer", "minimum": 0},
+                "source_frame_id": {"$ref": "#/$defs/nonEmptyString"},
+                "selection_timestamp_source": {"enum": ["device", "host_receipt"]},
+                "selected_timestamp_ns": {"const": null},
+                "measured_skew_ns": {"const": null}
+              }
+            },
+            "else": {
+              "properties": {
+                "sequence_id": {"type": "integer", "minimum": 0},
+                "source_frame_id": {"type": "string", "minLength": 1},
+                "selection_timestamp_source": {"enum": ["device", "host_receipt"]},
+                "selected_timestamp_ns": {"type": "integer", "minimum": 0},
+                "measured_skew_ns": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "type", "start_timestamp_ns", "end_timestamp_ns", "description", "linked_frame_indices"],
+      "properties": {
+        "event_id": {"$ref": "#/$defs/nonEmptyString"},
+        "type": {"enum": ["intervention", "safety", "recovery", "correction", "abort"]},
+        "start_timestamp_ns": {"type": "integer", "minimum": 0},
+        "end_timestamp_ns": {"type": "integer", "minimum": 0},
+        "description": {"$ref": "#/$defs/nonEmptyString"},
+        "linked_frame_indices": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}}
+      }
+    },
+    "softwareRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "commit", "repository"],
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "version": {"$ref": "#/$defs/nonEmptyString"},
+        "commit": {"oneOf": [{"$ref": "#/$defs/gitCommit"}, {"type": "null"}]},
+        "repository": {"type": "string", "format": "uri"}
+      }
+    },
+    "openAMRobot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timebase", "synchronization", "action_semantics", "streams", "samples", "outcome", "events", "provenance", "recording"],
+      "properties": {
+        "timebase": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["clock_domain", "unit", "origin", "ordering_rule"],
+          "properties": {
+            "clock_domain": {"$ref": "#/$defs/nonEmptyString"},
+            "unit": {"const": "ns"},
+            "origin": {"const": "recording_start"},
+            "ordering_rule": {"const": "monotonic"}
+          }
+        },
+        "synchronization": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "tolerance_ns", "basis"],
+              "properties": {
+                "status": {"const": "pending_evidence"},
+                "tolerance_ns": {"const": null},
+                "basis": {"$ref": "#/$defs/nonEmptyString"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "tolerance_ns", "basis"],
+              "properties": {
+                "status": {"const": "declared"},
+                "tolerance_ns": {"type": "integer", "minimum": 0},
+                "basis": {"$ref": "#/$defs/nonEmptyString"}
+              }
+            }
+          ]
+        },
+        "action_semantics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["values", "timestamp", "observation_relationship", "capture_provenance"],
+          "properties": {
+            "values": {"enum": ["requested_pre_clip", "sent_post_clip", "execution_estimate"]},
+            "timestamp": {"enum": ["command_issued", "command_dispatched", "execution_estimate"]},
+            "observation_relationship": {"$ref": "#/$defs/nonEmptyString"},
+            "capture_provenance": {"$ref": "#/$defs/nonEmptyString"}
+          }
+        },
+        "streams": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/cameraStream"},
+          "required": ["camera_wrist_left", "camera_wrist_right", "head", "base", "robot_state", "action"],
+          "properties": {
+            "camera_wrist_left": {
+              "allOf": [
+                {"$ref": "#/$defs/cameraStream"},
+                {
+                  "properties": {"native_feature_key": {"const": "observation.images.camera_wrist_left"}, "role": {"const": "wrist_left"}}
+                }
+              ]
+            },
+            "camera_wrist_right": {
+              "allOf": [
+                {"$ref": "#/$defs/cameraStream"},
+                {
+                  "properties": {"native_feature_key": {"const": "observation.images.camera_wrist_right"}, "role": {"const": "wrist_right"}}
+                }
+              ]
+            },
+            "head": {
+              "allOf": [
+                {"$ref": "#/$defs/cameraStream"},
+                {"properties": {"native_feature_key": {"const": "observation.images.head"}, "role": {"const": "head"}}}
+              ]
+            },
+            "base": {
+              "allOf": [
+                {"$ref": "#/$defs/cameraStream"},
+                {"properties": {"native_feature_key": {"const": "observation.images.base"}, "role": {"const": "base_navigation"}}}
+              ]
+            },
+            "robot_state": {"$ref": "#/$defs/stateStream"},
+            "action": {"$ref": "#/$defs/actionStream"}
+          }
+        },
+        "samples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["episode_index", "frame_index", "task_index", "authoritative_timestamp_ns", "streams"],
+            "properties": {
+              "episode_index": {"type": "integer", "minimum": 0},
+              "frame_index": {"type": "integer", "minimum": 0},
+              "task_index": {"type": "integer", "minimum": 0},
+              "authoritative_timestamp_ns": {"type": "integer", "minimum": 0},
+              "streams": {
+                "type": "object",
+                "additionalProperties": {"$ref": "#/$defs/streamSample"},
+                "required": ["camera_wrist_left", "camera_wrist_right", "head", "base", "robot_state", "action"],
+                "properties": {
+                  "camera_wrist_left": {"$ref": "#/$defs/streamSample"},
+                  "camera_wrist_right": {"$ref": "#/$defs/streamSample"},
+                  "head": {"$ref": "#/$defs/streamSample"},
+                  "base": {"$ref": "#/$defs/streamSample"},
+                  "robot_state": {"$ref": "#/$defs/streamSample"},
+                  "action": {"$ref": "#/$defs/streamSample"}
+                }
+              }
+            }
+          }
+        },
+        "outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": {"status": {"enum": ["success", "failure", "aborted", "unknown"]}, "reason": {"type": ["string", "null"]}}
+        },
+        "events": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["data_origin", "source_profile", "robot_configuration_hash", "software", "lerobot_compatibility"],
+          "properties": {
+            "data_origin": {"enum": ["actual", "synthetic"]},
+            "source_profile": {"$ref": "#/$defs/nonEmptyString"},
+            "robot_configuration_hash": {"$ref": "#/$defs/sha256"},
+            "software": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/softwareRecord"}},
+            "lerobot_compatibility": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["inspected_baseline", "validated_release_pin"],
+              "properties": {
+                "inspected_baseline": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["release", "commit", "status"],
+                  "properties": {
+                    "release": {"$ref": "#/$defs/nonEmptyString"},
+                    "commit": {"$ref": "#/$defs/gitCommit"},
+                    "status": {"const": "inspected_not_validated"}
+                  }
+                },
+                "validated_release_pin": {
+                  "oneOf": [
+                    {"type": "null"},
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["release", "commit", "evidence"],
+                      "properties": {
+                        "release": {"$ref": "#/$defs/nonEmptyString"},
+                        "commit": {"$ref": "#/$defs/gitCommit"},
+                        "evidence": {"$ref": "#/$defs/nonEmptyString"}
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "recording": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start_timestamp_ns", "end_timestamp_ns", "status"],
+          "properties": {
+            "start_timestamp_ns": {"type": "integer", "minimum": 0},
+            "end_timestamp_ns": {"type": "integer", "minimum": 0},
+            "status": {"enum": ["complete", "interrupted"]}
+          }
+        }
+      }
+    }
+  }
+}

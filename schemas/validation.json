@@ -1,4 +1,18 @@
 {
   "format_version": 1,
-  "entries": []
+  "entries": [
+    {
+      "schema": "schemas/json/c9-lerobot-dataset.schema.json",
+      "valid": [
+        "schemas/yaml/c9-lerobot-dataset-valid.yaml"
+      ],
+      "invalid": [
+        "schemas/json/c9-lerobot-dataset-invalid-missing-language.json",
+        "schemas/json/c9-lerobot-dataset-invalid-missing-version.json",
+        "schemas/json/c9-lerobot-dataset-invalid-missing-timebase.json",
+        "schemas/json/c9-lerobot-dataset-invalid-malformed-camera.json",
+        "schemas/json/c9-lerobot-dataset-invalid-missing-provenance.json"
+      ]
+    }
+  ]
 }

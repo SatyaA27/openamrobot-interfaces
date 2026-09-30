@@ -16,10 +16,11 @@ dependencies. A missing tool/dependency fails; no stage is skipped.
 
 ## JSON/YAML coverage
 
-There are currently no domain JSON/YAML contracts in this repository. The report
-therefore explicitly records `schemas.status: NOT_APPLICABLE`, a count of zero,
-and the reason. It does not claim nonexistent contracts were validated. Validator
-regression tests still run on representative JSON/YAML fixtures.
+The C9 LeRobotDataset contract is registered in
+`schemas/json/c9-lerobot-dataset.schema.json`, with a valid YAML manifest and
+parseable invalid JSON manifests. It is a proposed contract, so schema success
+does not validate camera calibration, timing, hardware, or release readiness.
+Validator regression tests still run in addition to the registered fixtures.
 
 When adding a domain schema, register it in `schemas/validation.json`:
 
