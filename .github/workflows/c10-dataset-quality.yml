@@ -11,8 +11,21 @@ permissions:
 jobs:
   c10-reference:
     runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+    env:
+      C10_CHECKER_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      C10_EVIDENCE_DIR: .verification/c10-evidence
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Prepare evidence directory
+        run: |
+          mkdir -p "$C10_EVIDENCE_DIR"
+          printf '%s\n' "$C10_CHECKER_SHA" > "$C10_EVIDENCE_DIR/expected-checker-sha.txt"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -21,5 +34,40 @@ jobs:
           python -m pip install -r tools/requirements-c10-native.txt
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run nonempty C10 suites
-        run: python tools/run_verification_tests.py tests 'test_c10*.py'
+      - name: Run nonempty C10 core suite
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          python tools/run_verification_tests.py tests test_c10_dataset.py 2>&1 | tee "$C10_EVIDENCE_DIR/core-suite.log"
+      - name: Run nonempty C10 native suite
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          python tools/run_verification_tests.py tests test_c10_native.py 2>&1 | tee "$C10_EVIDENCE_DIR/native-suite.log"
+      - name: Run nonempty C10 evidence suite
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          python tools/run_verification_tests.py tests test_c10_evidence.py 2>&1 | tee "$C10_EVIDENCE_DIR/evidence-suite.log"
+      - name: Prove reverted arithmetic check is detected
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          python tools/prove_c10_negative.py 2>&1 | tee "$C10_EVIDENCE_DIR/revert-negative.log"
+      - name: Generate reproducible synthetic CLI evidence
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          python tools/generate_c10_evidence.py \
+            --output-dir "$C10_EVIDENCE_DIR/synthetic" \
+            --expected-checker-sha "$C10_CHECKER_SHA" \
+            2>&1 | tee "$C10_EVIDENCE_DIR/generation.log"
+      - name: Upload C10 report and test evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: c10-evidence-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: .verification/c10-evidence/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

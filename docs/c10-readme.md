@@ -97,9 +97,12 @@ An abbreviated synthetic report looks like:
 }
 ```
 
-The complete generated synthetic report is recorded alongside the
-[execution evidence](c10-verification.md). It is deliberately blocked even when
-the synthetic semantic checks pass.
+The [evidence handoff](c10-evidence-handoff.md) documents a single command that
+generates the complete synthetic CLI report, exact checker SHA/command and
+reproduction inputs. The C10 workflow uploads these and native-suite output as
+downloadable artifacts, including on failure. The report stays blocked even
+when synthetic semantic checks pass. Earlier local results remain in the
+[execution evidence](c10-verification.md).
 
 ## Reviewed policy input
 
