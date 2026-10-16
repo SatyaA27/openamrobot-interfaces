@@ -24,6 +24,7 @@ import test_c10_dataset as semantics
 from check_c10_dataset import check_dataset
 
 WRAPPER_CASES = {
+    "orphan_native_episode_rows": ("C10_NATIVE_DATA", "REJECT"),
     "duplicate_json_key": ("C10_INPUT", "REJECT"),
     "invalid_c9_schema": ("C10_SCHEMA", "REJECT"),
     "duplicate_native_episode": ("C10_NATIVE_METADATA", "REJECT"),
@@ -196,7 +197,11 @@ class C10WrapperTests(unittest.TestCase):
         import pyarrow as pa
         import pyarrow.parquet as pq
 
-        if case == "native_row_range":
+        if case == "orphan_native_episode_rows":
+            orphan = deepcopy(self.native["rows"][0])
+            orphan["episode_index"] = 99
+            self.native["rows"].append(orphan)
+        elif case == "native_row_range":
             self.native["rows"][1]["index"] = 42
         elif case in ("recording_release_commit", "unapproved_release"):
             pin = {"release": "synthetic-test-release", "commit": "1" * 40,

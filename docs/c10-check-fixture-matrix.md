@@ -64,6 +64,7 @@ artifacts or exercise missing/contradictory evidence. No real recording is alter
 | `C10_INPUT` | `duplicate_json_key` | REJECT | `C10WrapperTests.test_wrapper_duplicate_json_key` |
 | `C10_INPUT` | `malformed_nested_policy` | REJECT | `C10WrapperTests.test_wrapper_malformed_nested_policy` |
 | `C10_NATIVE_DATA` | `native_row_range` | REJECT | `C10WrapperTests.test_wrapper_native_row_range` |
+| `C10_NATIVE_DATA` | `orphan_native_episode_rows` | REJECT | `C10WrapperTests.test_wrapper_orphan_native_episode_rows` |
 | `C10_NATIVE_DATA` | `truncated_parquet` | REJECT | `C10WrapperTests.test_wrapper_truncated_parquet` |
 | `C10_NATIVE_METADATA` | `duplicate_native_episode` | REJECT | `C10WrapperTests.test_wrapper_duplicate_native_episode` |
 | `C10_PARQUET_DTYPE` | `native_double_vectors` | REJECT | `C10WrapperTests.test_wrapper_native_double_vectors` |

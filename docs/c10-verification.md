@@ -43,14 +43,14 @@ git diff --check
 | Verification | Result / executed count |
 | --- | --- |
 | C10 core suite | PASS, 63 tests, zero skips |
-| C10 native-artifact suite | PASS, 30 tests, zero skips; includes actual temporary Parquet reads/corruption. Video-unavailable branch explicitly exercised locally. |
+| C10 native-artifact suite | PASS, 31 tests, zero skips; includes actual temporary Parquet reads/corruption and orphan rows in shared files. Video-unavailable branch explicitly exercised locally. |
 | Existing compatibility suite | PASS, 14 tests |
 | Existing schema-only regression class | PASS, 10 tests |
 | Existing registered schema validation | PASS, 1 schema / 10 registered assets (schema plus 1 valid and 8 invalid fixtures) |
 | Reverted affine rule | Current code: 1 unchanged negative test PASS. Temporary reverted rule: that same test FAILED with exactly 1 assertion failure and no errors/skips. Proof command exit 0. |
 | Whitespace/scope review | PASS; canonical C9 assets untouched |
 
-The C10 matrices contain 46 C9-valid semantic corruption cases and 20 named
+The C10 matrices contain 46 C9-valid semantic corruption cases and 21 named
 wrapper corruption/missing-evidence cases across all 28 diagnostic families.
 Other tests exercise clean PASS, boundaries, missing approval and environmental
 evidence. Counts are unittest test methods; subcases are not inflated into

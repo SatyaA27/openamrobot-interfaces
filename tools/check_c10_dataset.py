@@ -106,7 +106,7 @@ def native_metadata(root):
     return info, tasks, {row["episode_index"]: row for row in episodes}
 
 
-def read_rows(root, info, episode, emit):
+def read_rows(root, info, episode, emit, known_episode_indices=None):
     try:
         template = info.get("data_path", "data/chunk-{chunk_index:03d}/file-{file_index:03d}.parquet")
         args = dict(episode_index=episode["episode_index"],
@@ -119,7 +119,13 @@ def read_rows(root, info, episode, emit):
                  fix="Provide the native episode Parquet artifact.")
             return None
         table = parquet(path)
-        rows = [row for row in table.to_pylist() if row.get("episode_index") == episode["episode_index"]]
+        all_rows = table.to_pylist()
+        if known_episode_indices is not None:
+            orphans = sorted({row.get("episode_index") for row in all_rows if row.get("episode_index") not in known_episode_indices},key=str)
+            emit("C10_NATIVE_DATA", "REJECT" if orphans else "PASS",observed=orphans,
+                 expected="every stored episode_index belongs to the native episode registry",
+                 fix="Reconcile orphan rows in the referenced native Parquet file with immutable episode metadata.")
+        rows = [row for row in all_rows if row.get("episode_index") == episode["episode_index"]]
         emit("C10_NATIVE_DATA", "PASS", observed=len(rows), expected=episode.get("length"), units="frames")
         import pyarrow as pa
         for key in ("observation.state", "action"):
@@ -357,7 +363,7 @@ def check_dataset(dataset_path, policy_path=None, episode_indices=None):
                 emit("C10_NATIVE_METADATA","REJECT",observed=index,expected="one sidecar per episode",fix="Remove duplicate episode sidecars from the recording export.")
             seen.add(index)
             episode = episodes.get(index,{"episode_index":index})
-            rows = read_rows(root,info,episode,emit) if index in episodes else None
+            rows = read_rows(root,info,episode,emit,set(episodes)) if index in episodes else None
             native = {"info":info,"tasks":tasks,"episode":episode,"rows":rows}
             metrics = check_episode(sidecar,native,policy,emit)
             if rows is not None:
