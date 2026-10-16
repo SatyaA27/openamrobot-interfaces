@@ -1,0 +1,25 @@
+name: C10 reference quality gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  c10-reference:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scoped C10 verification dependencies
+        run: |
+          python -m pip install -r tools/requirements-c10-native.txt
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Run nonempty C10 suites
+        run: python tools/run_verification_tests.py tests 'test_c10*.py'

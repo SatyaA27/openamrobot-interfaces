@@ -1,0 +1,3 @@
+-r requirements-c10.txt
+# Optional native Parquet integration; PyPI pyarrow (Apache-2.0).
+pyarrow>=17,<27

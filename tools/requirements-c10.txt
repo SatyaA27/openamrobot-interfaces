@@ -1,0 +1,4 @@
+# Core validators already used by tools/lint_schemas.py.
+# PyPI jsonschema (MIT); PyYAML (MIT). No LeRobot runtime required.
+jsonschema>=4.18,<5
+PyYAML>=6,<7

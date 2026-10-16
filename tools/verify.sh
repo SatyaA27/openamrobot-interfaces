@@ -41,6 +41,7 @@ clean_bash -c '
   source /opt/ros/jazzy/setup.bash
   python3 "$1/tools/lint_schemas.py" --root "$1" --report "$2/lint-schema.json"
   python3 "$1/tools/run_verification_tests.py" "$1/tests" test_schema_validation.py
+  python3 "$1/tools/run_verification_tests.py" "$1/tests" test_c10_dataset.py
 ' verify "$root" "$run" 2>&1 | tee "$run/lint-schema.log"
 
 stage=interface-build
