@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openamrobot:contract:c9:components:1",
+  "title": "Proposed additive C9 component profile v1 (not a replacement episode contract)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "component_profile_version",
+    "c9_contract_version",
+    "profile_id",
+    "status",
+    "model",
+    "components",
+    "channels",
+    "source_profiles",
+    "limitations"
+  ],
+  "properties": {
+    "component_profile_version": {
+      "const": 1
+    },
+    "c9_contract_version": {
+      "const": 1
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "const": "proposed"
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "column",
+        "lift_joint",
+        "lift_range_m"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "column": {
+          "const": "dold_v4_350"
+        },
+        "lift_joint": {
+          "const": "lift_joint"
+        },
+        "lift_range_m": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": 0
+            },
+            {
+              "const": 0.35
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "left_arm",
+          "right_arm",
+          "left_gripper",
+          "right_gripper",
+          "lift",
+          "base"
+        ]
+      }
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "component",
+          "joint",
+          "unit",
+          "index",
+          "range",
+          "state_source",
+          "action_source",
+          "authority",
+          "status",
+          "native_unit",
+          "ros_unit",
+          "lerobot_unit",
+          "conversion",
+          "state_semantics",
+          "action_semantics"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "component": {
+            "enum": [
+              "left_arm",
+              "right_arm",
+              "left_gripper",
+              "right_gripper",
+              "lift",
+              "base"
+            ]
+          },
+          "joint": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unit": {
+            "enum": [
+              "rad",
+              "m",
+              "m/s",
+              "rad/s"
+            ]
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "range": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            ]
+          },
+          "state_source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authority": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "confirmed_model",
+              "proposed",
+              "blocked"
+            ]
+          },
+          "native_unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ros_unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lerobot_unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "conversion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state_semantics": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action_semantics": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "source_profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "representation",
+          "dimensions",
+          "units",
+          "mapping_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "representation": {
+            "const": "qpos"
+          },
+          "dimensions": {
+            "enum": [
+              16,
+              17
+            ]
+          },
+          "units": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "rad",
+                "mm"
+              ]
+            }
+          },
+          "mapping_status": {
+            "const": "requires_explicit_source_metadata"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

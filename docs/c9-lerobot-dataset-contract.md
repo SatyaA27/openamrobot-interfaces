@@ -1,6 +1,6 @@
 # C9 whole-body capture / LeRobotDataset contract
 
-Status: **Proposed** — [contract change request #18](https://github.com/openAMRobot/openamrobot-interfaces/issues/18), pending software-lead acceptance.
+Status: **Accepted for the v1 additive sidecar shape** — [acceptance record #18](https://github.com/openAMRobot/openamrobot-interfaces/issues/18), implementation merged in #16. Historical proposal wording below describes representation, not recorder/release/physical acceptance. The component adjunct in `c9-component-extension.md` remains Proposed.
 
 `schemas/json/c9-lerobot-dataset.schema.json` is the proposed version 1
 episode-manifest contract for Workstream C9. It describes a recording and its

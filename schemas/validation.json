@@ -16,6 +16,15 @@
         "schemas/json/c9-lerobot-dataset-invalid-missing-selected-timestamp.json",
         "schemas/json/c9-lerobot-dataset-invalid-missing-host-receipt-timestamp.json"
       ]
+    },
+    {
+      "schema": "schemas/json/c9-component-profile.schema.json",
+      "valid": [
+        "schemas/json/c9-component-profile-valid.json"
+      ],
+      "invalid": [
+        "schemas/json/c9-component-profile-invalid.json"
+      ]
     }
   ]
 }
