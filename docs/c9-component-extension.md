@@ -18,8 +18,8 @@ seven right joints, right gripper, lift position, base forward velocity and base
 yaw rate: 19 entries. Its identifier is distinct from the historical 19-channel
 fixed-mast vector (six joints per arm plus two torso placeholders). Neither may
 be padded, truncated or relabelled as the other. Model joint names and ROS radian
-units are recorded; arm/gripper ranges stay null until exact generated-model
-bounds are supplied. No normalized gripper opening, motor angle, finger-joint
+units are recorded; arm/gripper ranges now match the exact pinned generated-model
+bounds; they remain model values, not physically validated limits. No normalized gripper opening, motor angle, finger-joint
 angle or Cartesian pose is silently treated as another representation.
 
 The model source pin is upperbody `2ca739202f5c51114de1520902e811817d9b2a62`.
@@ -58,8 +58,8 @@ bash tools/verify.sh
 ```
 
 The first command checks registered fixtures and immutable v1 bytes. The second
-checks pinned source names, order, stroke and groups; it is not an expanded-URDF
-or live ROS result. The third remains the full required ROS/DDS gate. On the local
+checks pinned source names, order, stroke and groups. The additional generated-model
+command below checks expanded URDFs; neither establishes live simulation. The third remains the full required ROS/DDS gate. On the local
 macOS host it is BLOCKED at ROS prerequisites. Native conversion and explicit
 16/17/unit regressions live in the dependent embodied-AI consumer draft; no QA
 implementation is duplicated here. LeRobot v0.6.1 is an inspected development pin,
@@ -81,3 +81,28 @@ MIT OpenAMRobot contracts/model configuration and the cited upstream inventory;
 no upstream implementation is copied. Software is MIT; this document is CC-BY-4.0.
 Codex assisted with schema, tests, mapping and documentation. No physical or
 simulation recording, safety acceptance or new profile acceptance is claimed.
+
+## Generated-model follow-up
+
+ROS Jazzy xacro expansion and check_urdf were executed locally in an isolated
+Linux container for mock, Gazebo and real profiles. Arm/gripper ranges in the
+proposed mapping come from these generated models. The dedicated CI job repeats:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+python3 tools/verify_c9_generated_model.py --upperbody-root external/upperbody --platform-root external/platform --openarm-root external/openarm --output-dir .verification/c9-generated
+```
+
+Pins: upperbody 2ca739202f5c51114de1520902e811817d9b2a62; platform
+131e500fc4e5afc9f648cbd7dbf5b416280761fb; openarm_description
+14ff67b638ff1c738a1b9a6be8aaa5ce5ed2c831. The tool refuses dirty or different
+source heads. Sources are registered in a temporary ament prefix solely for
+package resolution; no hardware plugin is loaded and no robot graph is started.
+
+Every mapped joint must exist with the expected revolute/radian or prismatic/metre
+type and exact lower/upper model range. The real lift has effort/velocity 0 and no
+ROS command interface; mock/Gazebo have one position interface. Unit regressions
+reject modified lift/gripper ranges, wrong lift units and an invented real-profile
+lift command. CI publishes URDFs, check_urdf logs and source/hash manifest.
+No arm/gripper motor-to-joint equivalence or physical measurement is inferred.
+The base remains a separately blocked velocity mapping with unknown bounds.

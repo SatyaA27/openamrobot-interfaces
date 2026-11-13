@@ -24,3 +24,46 @@ jobs:
       - run: python -m pip install jsonschema PyYAML
       - run: python -m unittest discover -s tests -p test_c9_components.py -v
       - run: python tools/check_c9_component_model.py --upperbody-root external/upperbody
+      - run: python -m unittest discover -s tests -p test_c9_generated_model.py -v
+  c9-generated-model:
+    runs-on: ubuntu-24.04
+    container: ros:jazzy-ros-base@sha256:00b8d47a6e6384a2834e3d01fa87ae767876543baa574f2d64a75c04ea33c698
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: openAMRobot/openamr-upperbody-sw
+          ref: 2ca739202f5c51114de1520902e811817d9b2a62
+          path: external/upperbody
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: openAMRobot/openamr-platform-sw
+          ref: 131e500fc4e5afc9f648cbd7dbf5b416280761fb
+          path: external/platform
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: enactic/openarm_description
+          ref: 14ff67b638ff1c738a1b9a6be8aaa5ce5ed2c831
+          path: external/openarm
+          persist-credentials: false
+      - name: Install scoped model tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends ros-jazzy-xacro liburdfdom-tools python3-yaml
+      - name: Expand and compare pinned mock, Gazebo and real models
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          python3 tools/verify_c9_generated_model.py --upperbody-root external/upperbody --platform-root external/platform --openarm-root external/openarm --output-dir .verification/c9-generated
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: c9-generated-model-evidence
+          path: .verification/c9-generated/
+          include-hidden-files: true
+          if-no-files-found: error

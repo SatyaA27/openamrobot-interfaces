@@ -43,4 +43,9 @@ The PR evidence check fails when STATE.md exists and a PR neither updates it nor
 - Local schema/profile tests: 3 PASS; explicit pinned-model source check: 1 PASS.
   Full ROS/DDS `tools/verify.sh` BLOCKED at absent Jazzy prerequisites on macOS.
 - New full-body action/capture mappings, stowed pose and release pin need owner review;
-  no actual recording, expanded-model execution or physical acceptance is verified.
+  no actual recording or physical acceptance is verified.
+
+- 12 November continuation: generated mock/Gazebo/real URDFs pass check_urdf and
+  proposed C9 joint/type/range/interface checks in ROS Jazzy. Model arm/gripper
+  bounds populated; real lift retains no ROS command interface. Dedicated CI
+  retains generated evidence. Model checks do not grant motion/profile acceptance.
